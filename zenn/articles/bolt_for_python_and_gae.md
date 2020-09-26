@@ -42,7 +42,7 @@ published: false
 
 このリリースによって、これまでJavaやJavaScriptからしか使えなかったBoltをPythonから呼べるようになった。そのため、Pythonのライブラリを呼ぶ処理とBoltを呼ぶ二つの処理を、単一言語、単一サーバーで作れるようになった。^[以前からSlack社はpython-slackclientやpython-slack-events-apiなどをリリースしていたが、私はBoltの設計に興味があった。これまではBoltを叩くTypeScriptと処理系を書くPythonの間の連携処理を作る過程で面倒になっていた。]
 
-Slackをスクリプトで操作する方法には「外から単方向の通信」^[ローカルマシンから`Incoming Webhooks`などの機能を用いてた操作]と「双方向の連携」^[WorkSpace上で起きたイベントに対応して動く操作(Bot)]の2種類があり、この記事はBoltの機能を活用出来る後者を採用する。
+Slackをスクリプトで操作する方法には「外からの単方向の通信」^[ローカルマシンから`Incoming Webhooks`などの機能を用いてた操作]と「双方向の連携」^[WorkSpace上で起きたイベントに対応して動く操作(Bot)]の2種類があり、この記事はBoltの機能を活用出来る後者を採用する。
 
 ## 実装工程の概要
 
@@ -101,10 +101,10 @@ sequenceDiagram
 7. [Applications](https://api.slack.com/apps?new_app=1)」 > {アプリ名} > `Settings`> `Basic Information` > `Credentials` の階層にある `Signing Secret` の値をメモします。
 
 ### 注意点(1)
-- Slackの仕様については、公式ドキュメントを参照するとよいです。  
+- Slackの仕様は、公式ドキュメントを参照するとよいです。  
 - 個人的なハマりどころ、感想としては、Slackは機能が多くサイト構成が複雑なため、目的達成に何の機能が必要で何を設定するべきなのか理解していないと時間がかかりそうでした。
-- 私はこの作業を20分くらいで終わらせられましたが、開くべきページや設定を間違え続けると数時間溶けることもありそう。
-- 機能を追加していく場合、安定版と開発版の2種類のBotを作っておくと、クラウドとngrokの設定を分離でき、運用しながらのデバッグもしやすくなり便利でした。
+- 私はこの作業を手探りで20分くらいで終わらせられましたが、開くべきページや設定を間違え続けると数時間溶けることもありそうです。
+- 機能を追加していく場合、安定版と開発版の2種類のBotを作っておくと、クラウドとngrokの設定を分離でき、運用しながらのデバッグもしやすくなりました。
 
 ### 参考(1)
 - [Slack | Bolt for JavaScript](https://slack.dev/bolt-js/tutorial/getting-started)
@@ -176,7 +176,7 @@ gcloud app deploy    # サーバー起動後にデプロイ先のURLが表示さ
 
 ::: Google App Engineの選定理由について
 Bolt for Pythonのチュートリアルでは`ngrok`がサーバー構築に用いられているが、私は手軽に運用出来るようにクラウドコンピューティングを採用した。具体的には`GAE`(Google App Engine)を用いた。^[デバッグや検証はngrokで行う方が簡単で早いです。]
-他に`AWS Lambda`や`ECS`(Amazon Elastic Container Service)、`GCE`(Google Computer Engine)、`Heroku`を検討したが『趣味なので、無料であること、簡潔さを重視する』という基準から、無料内の自由度が高く、ファイルアップロードが簡単なGAEを選択した。(個人の感想による比較です。)^[なお、Bolt for Pythonのsampleディレクトリに他の環境の用の動作スクリプトも用意されているので、それを見ればGAE以外も簡単に動かせる。]^[有料だと管理するのが面倒になる気がする。]
+他に`AWS Lambda`や`ECS`(Amazon Elastic Container Service)、`GCE`(Google Computer Engine)、`Heroku`を検討したが『趣味なので、無料であること、簡潔さを重視する』という基準から、無料内の自由度が高く、ファイルアップロードが簡単なGAEを選択した。(個人の感想による比較です。)^[なお、Bolt for Pythonのsampleディレクトリに他の環境の用の動作スクリプトも用意されているので、それを見ればGAE以外も簡単に動かせる。]^[有料だと管理コストが増える。]
 :::
 
 ::: GAEのリージョン選択と無料枠(Always Free)について
@@ -215,9 +215,9 @@ Bolt for Pythonのチュートリアルでは`ngrok`がサーバー構築に用�
 
 ## 感想とこの次
 - ここまでで想定以上に記事が長くなってしまったのでBoltのAPIの仕様説明などはボツにしてしまった。
-- 導入記事、ちゃんと書くとここまで面倒になるとは想定していなかった。
+- 導入記事をちゃんと書くと、ここまで面倒になるとは想定していなかった。
 - 最近、機能増えたし、Lambdaの方が良かったのでは？と思わなくはない。
 - もう書いてしまったけど、Bolt for Pythonは未だalfa版^[執筆時の版、記事公開時にはbeta版になっていた。]であり、一般向けに書くような記事ではなかった気も若干する。
 - Boltの機能を活用したアプリを他にも作って遊んでいたので、そちらの機能紹介、作り方を私の元気と需要があれば書きます。
 
-This article is written by anosillus@gmail.com <i class="cc cc-by-sa"></i>
+This article is written by anosillus(anosillus@gmail.com) <i class="cc cc-by-sa"></i>
